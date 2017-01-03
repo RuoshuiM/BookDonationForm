@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Book Donation Form</title>
+    <style>
+        body {
+            margin: 0px;
+            background: white;
+        }
+
+        h1, h2, p {
+            font-family: "Comic Sans MS",serif;
+        }
+
+        * {
+            z-index: 98;
+        }
+
+        header, footer {
+            align-content: center;
+            text-align: center;
+            background-color: rgb(255, 106, 0);
+            width: 100%;
+            display: block;
+            margin: 0px;
+            z-index: 100;
+        }
+
+        header {
+            top: 0px;
+            position: fixed;
+            height: 100px;
+        }
+
+        footer {
+            position: static;
+            height: 100px;
+        }
+
+        main {
+            margin: 100px auto auto 100px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input {
+            display: inline-block;
+        }
+
+        /*code form beautiful buttons*/
+        .button {
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            padding: 20px;
+            margin: 5px;
+            font-size: 28px;
+            width: 200px;
+            text-align: center;
+            color: rgb(255, 255, 255);
+            background-color: rgb(0,255,255);
+            transition: all 0.5s;
+        }
+
+            .button span {
+                cursor: pointer;
+                display: inline-block;
+                position: relative;
+                transition: 0.5s;
+            }
+
+                .button span:after {
+                    content: '\00bb';
+                    position: absolute;
+                    opacity: 0;
+                    top: 0px;
+                    right: -20px;
+                    transition: 0.5s;
+                }
+
+            .button:hover span {
+                padding-right: 25px;
+            }
+
+                .button:hover span:after {
+                    opacity: 1;
+                    right: 0;
+                }
+
+        
+    </style>
+</head>
+
+<body>
+
+    <!-- universal header -->
+    <header>
+        <h1 id="headerMessage">Welcome!</h1>
+    </header>
+
+
+    <main>
+        <!-- this form gets the language that the user uses -->
+        <form id="langForm">
+
+            <!-- header -->
+            <h2>Please choose the language you prefer</h2>
+            <h2>请选择您想要使用的语言</h2>
+
+            <!-- get language -->
+            <!-- English -->
+            <input type="radio" name="language" value="English" checked> English
+
+            <!-- Chinese -->
+            <input type="radio" name="language" value="中文"> 中文
+
+        </form>
+
+
+
+        <!-- this form gets the name of the user -->
+        <!-- this is separated because it is based on the first form and the user can just enter once -->
+        <form id="nameForm" class="hidden">
+
+            <!-- the name of the user -->
+            <p id="responserNameP">Please enter your name</p>
+            <input type="text" name="responserName" id="responserNameI" />
+
+
+        </form>
+
+
+        <!-- this form gets the main information about the book -->
+        <!-- the description/paragraph changes based on the language selected, which will be accomplished by JS -->
+        <form id="mainForm" class="hidden" onsubmit="return false">
+
+            <!-- title -->
+            <h1 id="formTitle">Book Donation Form</h1>
+
+            <!-- book name -->
+            <p id="bookNameP">Enter the name of the book</p>
+            <input type="text" name="bookName" id="bookNameI" />
+
+            <!-- author name -->
+            <p id="authorNameP">Enter the author of the book</p>
+            <input type="text" name="authorName" id="authorNameI" />
+
+            <!-- book ISBN -->
+            <p id="isbnP">Enter the ISBN of the book</p>
+            <input type="text" name="ISBN" id="isbnI" />
+            <img src="ISBNLocation.png" alt="ISBN Location on a book" />
+
+            <!-- book edition -->
+            <p id="bookEditionP">If applicable, enter the edition of the book</p>
+            <input type="text" name="bookEdition" id="bookEditionI" />
+
+            <!-- this button submits the form and shows thank you window -->
+            <button class="button" id="submitBt"><span>Submit</span></button>
+
+            <!-- this button submits the form and clear all the imputs -->
+            <button class="button" id="fillAnotherBt"><span>Fill Another</span></button>
+
+
+        </form>
+
+        <!-- the button that switches to the next form -->
+        <button type="button" class="button" id="nextBt"><span>Next</span></button>
+
+        <!-- the button that switches to the next previous form -->
+        <button type="button" class="button" id="previousBt"><span>Go Back</span></button>
+
+    </main>
+
+
+    <footer>
+        <h1 id="footerMessage">Thank You for Your Support!</h1>
+    </footer>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        $(function () {
+            //get forms and buttons
+            var formOne = $("#langForm");
+            var formTwo = $("#nameForm");
+            var formThree = $("#mainForm");
+            var nextBt = $("#nextBt");
+            var previousBt = $("#previousBt");
+            var submitBt = $("#submitBt");
+          var fillAnotherBt = $("#fillAnotherBt");
+
+            //hide "previousBt"
+            previousBt.hide();
+
+            //an object for storing form answers
+            var form = {};
+          form.book = {};
+
+            //an object containing functions for changing language
+            var changeLang = {};
+
+            //function for changing form language into English
+            changeLang.English = function () {
+                console.log("I'm being translated into English");
+                $("#headerMessage").text("Welcome!");
+                $("#footerMessage").text("Thank You for Your Support!");
+                $("#responserNameP").text("Enter your name");
+                $("#formTitle").text("Book Donation Form");
+                $("#bookNameP").text("Enter the name of the book");
+                $("authorNameP").text("Enter the name of the author");
+                $("#isbnP").text("Enter the ISBN of the book");
+                $("#bookEditionP").text("If applicable, enter the edition of the book");
+                $("#submitBt span").text("Submit");
+                $("#fillAnotherBt span").text("Fill Another");
+                $("#nextBt span").text("Next");
+                $("#previousBt span").text("Go Back");
+
+            }
+
+            //function for changing form language into Chinese
+            changeLang.Chinese = function () {
+                console.log("I'm being translated into Chinese!")
+                $("#headerMessage").text("欢迎！");
+                $("#footerMessage").text("感谢您的支持！");
+                $("#responserNameP").text("请输入您的姓名");
+                $("#formTitle").text("图书捐赠表格");
+                $("#bookNameP").text("请输入书名");
+                $("authorNameP").text("请输入作者");
+                $("#isbnP").text("请输入书的ISBN号码");
+                $("#bookEditionP").text("如果有的话，请输入书的修订版");
+                $("#submitBt span").text("提交");
+                $("#fillAnotherBt span").text("再填一张");
+                $("#nextBt span").text("下一页");
+                $("#previousBt span").text("上一页");
+            }
+            
+            //change lang if a radio button is clicked
+            $("input:radio[name=language]").click(function(){
+              switch ($("input:radio[name=language]:checked").val()) {
+                        case "English":
+                            //change the language of the form into English
+                            console.log("lang is English");
+                            changeLang.English();
+                            break;
+
+                        case "中文":
+                            // change the language of the form into Chinese
+                            console.log("lang is Chinese");
+                            changeLang.Chinese();
+                            break;
+                    }
+            })
+
+            //when nextBt is clicked
+            nextBt.click(function () {
+
+                //checks to see which form is currently visible
+                if ($("#langForm").is(":visible")) {
+                    //do these if the first form is visible
+
+
+                    //hide formOne and display formTwo and "previous" button
+                    formOne.slideUp(500).delay(500);
+                    formTwo.slideDown(500);
+                    previousBt.fadeIn(500);
+
+
+                } else if ($("#nameForm").is(":visible")) {
+                    //do these if the second form is visible
+
+                    //store the name of the person who is filling the form into the 'form' object
+                    form.responserName = $("#responserNameI").val();
+                    console.log(form.responserName + " is filling out the form!");
+
+                    //hide formTwo and display formThree
+                    formTwo.slideUp(500).delay(500);
+                    formThree.slideDown(500);
+
+                    //hide this button
+                    $(this).fadeOut(500);
+                }
+            })
+
+
+            //when previousBt is clicked
+            previousBt.click(function () {
+
+                //checks to see which form is visible
+                if(formTwo.is(":visible")) {
+                  
+                  //hide formTwo and display formOne and hide this button
+                  formTwo.slideUp(500).delay(500);
+                  formOne.slideDown(500);
+                  previousBt.fadeOut(500);
+                } else if (formThree.is(":visible")) {
+                  
+                  //hide formThree and display formTwo
+                  formThree.slideUp(500).delay(500);
+                  formTwo.slideDown(500);
+                  
+                  //nextBt is hidden, so show it
+                  nextBt.fadeIn(500);
+                }
+
+
+            })
+            
+            
+            //when submitBt is clicked
+            submitBt.click(function(){
+              
+              
+              //store information in 'form' object
+              form.book.name = $("#bookNameI").val();              
+              form.book.author = $("#authorNameI").val();              
+              form.book.isbn = $("#isbnI").val();              
+              form.book.edition = $("#bookEditionI").val();
+              console.log("Form Info:", "Book name: " + form.book.name, "Author name: " + form.author.name, "ISBN: " + form.book.isbn, "Book edition: ", form.book.edition);
+              
+            })
+            
+            
+            //when fillAnotherBt is clicked
+            fillAnotherBt.click(function(){
+              
+              
+              
+            })
+          
+          
+            
+
+
+        })
+
+    </script>
+</body>
+</html>
